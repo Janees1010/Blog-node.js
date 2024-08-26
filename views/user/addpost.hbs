@@ -37,38 +37,36 @@
     
  
             <main style="" class="row align-items-center justify-content-center">
-                          {{#each blog}}
-			<form action="/blog/editblog/{{_id}}" class="col-5"  method="post" enctype="multipart/form-data">
-				<h1 style="text-align: center;">Edit post</h1>
+			<form action="/blog/addpost" class="col-5"  method="post" enctype="multipart/form-data">
+				<h1 style="text-align: center;">Add post</h1>
 				{{#if err}}
 				   <div class="alert alert-danger" role="alert">
                         {{err}}
                     </div>
                 {{/if}}
-      
                  <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Title</label>
-                    <input type="text" class="form-control" name="title" value="{{title}}">
+                    <input type="text" class="form-control" name="title">
                </div>
                <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Description</label>
-                  <textarea style="width: 100%;" name="description" id=""   rows="3" >{{description}}</textarea> 
+                  <textarea style="width: 100%;" name="description" id=""  rows="3" ></textarea> 
                </div>
               <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Content</label>
-                     <textarea style="width: 100%;"  name="content" id=""  rows="5" >{{content}}</textarea>
+                     <textarea style="width: 100%;" name="content" id=""  rows="5" ></textarea>
              </div>
          
                     <div class="mb-3">
-                        {{!-- <label for="exampleInputEmail1" class="form-label">Banner</label> --}}
-                        <input onchange="img_preview(event)" name="image" type="file" value=" ">  
+                        <label for="exampleInputEmail1" class="form-label">Banner</label>
+                        <input onchange="img_preview(event)" name="image" type="file" class="form-control" name="email">  
                     </div>
                     <div  class="mb-3 justify-item-center">
-                      <img  id="image-preview" src="/images/{{banner}}"  alt="" width="250px" height="140px" style="">
+                      <img  id="image-preview" src=""  alt="" width="250px" height="140px" style="display:none;">
                     </div>
-               {{/each}}
+
                 
-            <button type="submit" class="btn btn-success">Save</button>
+            <button type="submit" class="btn btn-success">Submit</button>
     </form>
   </main>
 

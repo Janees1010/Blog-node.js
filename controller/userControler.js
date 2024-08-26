@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const User = require('../models/user');
+const {create_user,find_one_userByEmail,find_user_blogs} = require('../services/userService')
 const Blog = require("../models/blog");
 
 
@@ -40,14 +40,14 @@ const signup = async(req,res)=>{
             if(err){
                 console.log(err);
             }else{
-                const user = new User({
+                const user = {
                     name:name,
                     email:email,
                     password:result
-                  })
-                  const response = await user.save()
-                      req.session.user = response;
-                      return res.redirect('/')
+                  }
+                  const response = await create_user(user)
+                  req.session.user = response;
+                  return res.redirect('/')
             }
         }))
     }catch(err){
@@ -57,22 +57,25 @@ const signup = async(req,res)=>{
 
 }
 const signin = async(req,res)=>{
- let {email,password} = req.body;
- console.log(req.body);
+ let {email,password} = req.body; 
 
  try{
-    const user = await User.findOne({email:email})
+    const user = await find_one_userByEmail(email)
     if(user){
        await bcrypt.compare(password,user.password,(err,response)=>{
             if(response){
                 req.session.user = user;
-                return res.redirect('/')
+                if(user.role == "admin"){
+                   return res.redirect('/admin')
+                }else{
+                    return res.redirect('/')
+                }
             }else{
-                return res.render("signin",{err:"Incorect Password"})
+                return res.render("user/signin",{err:"Incorect Password"})
             }
         })
     }else{
-        return res.render("signin",{err:"Email not found"})
+        return res.render("user/signin",{err:"Email not found"})
     }
  }catch(err){
     console.log(err);
@@ -98,8 +101,8 @@ const user_posts = async(req,res)=>{
    
     try{
         let {_id,name} = req.session.user
-        const posts = await Blog.find({author:_id}).populate("author","name").lean()
-         res.render("posts",{blogs:posts,showheader:true,user:name})
+        const posts = await find_user_blogs(_id)
+        res.render("user/posts",{blogs:posts,showheader:true,user:name})
     }catch(err){
         console.log(err); 
     }

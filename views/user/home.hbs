@@ -11,47 +11,33 @@
     .blog-post-container {
       width: 100%;
       height: 155px;
-
       border: 1px sub #E0E0E0;
       border-radius: 5px;
       color: #212121;
-
     }
-
     h1 {
       font-weight: 600;
-
     }
-
     p {
       font-weight: 400;
     }
-
     main {
       padding: 40px 80px;
     }
-
     nav {
       background-color: #333333;
     }
-
-
-
     .dropdown:hover {
       background-color: #007BFF;
-      /* Slightly darker blue on hover */
     }
-
     .nav-link {
       color: #6C757D !important;
       font-weight: 500;
     }
-
     .navbar-brand {
       color: #6C757D !important;
       font-weight: 500;
     }
-
     body {
       background-color: #F7F7F7;
       font-family: sans-serif;
@@ -60,7 +46,6 @@
       text-decoration: none;
       cursor: pointer;
     }
-    
   </style>
 </head>
 
@@ -69,11 +54,11 @@
 
 
   <main>
-    {{#each blogs}}
+    {{#each blog}}
     <a href='/blog/post/{{_id}}'>
       <div class="d-flex blog-post-container align-items-center gap-3 justify-content-between">
         <div>
-          <h6 style="color:#808e8a;">Wriiten by {{author.name}}</h6>
+          <h6 style="color:#808e8a;">Written by {{author.name}} / created At  {{createdAt}}</h6>
           <h1>{{title}}</h1>
           <p>{{description}}</p>
         </div>

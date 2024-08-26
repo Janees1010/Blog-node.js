@@ -7,7 +7,9 @@
 </head>
 <body>
 
-    {{#if showheader}}
+    {{#if admin}}
+      {{> adminheader}}
+    {{else}}
         {{> header}}
     {{/if}}
      {{{body}}}

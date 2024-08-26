@@ -11,13 +11,13 @@ router.get('/posts',auth,user_posts)
 
 
 router.get('/signup',(req,res)=>{
-    res.render('signup',{showheader:false})    
+    res.render('user/signup',{showheader:false})    
 }) 
 router.get('/detail',(req,res)=>{
-    res.render("detailedview")
+    res.render("user/detailedview")
 })
 router.get('/signin',(req,res)=>{
-    res.render('signin',{showheader:false})
+    res.render('user/signin',{showheader:false})
 }) 
 
 
