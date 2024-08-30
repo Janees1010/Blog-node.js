@@ -11,7 +11,7 @@ const create_user = async(user_data)=>{
     }
 }
 
-const find_one_userByEmail = async (email)=>{
+const find_one_user_by_email = async (email)=>{
     try{
         const user = await User.findOne({email:email})
         return user; 
@@ -20,7 +20,7 @@ const find_one_userByEmail = async (email)=>{
     }
 }
 
-const find_one_userById = async (id)=>{
+const find_one_user_byid = async (id)=>{
     try{
         const user = await User.findOne({_id:id})
         return user; 
@@ -50,5 +50,13 @@ const edit_userRole = async(id,role)=>{
       console.log(error);
   }
 }
+const remove_user = async(id)=>{
+    try{
+      const response  = await User.findByIdAndDelete(id);
+      return response
+    }catch(err){
 
-module.exports={create_user,find_one_userByEmail,get_all_users,find_user_blogs,find_one_userById,edit_userRole}
+    }
+}
+
+module.exports={create_user,find_one_user_by_email,get_all_users,find_user_blogs,find_one_user_byid,edit_userRole,remove_user}

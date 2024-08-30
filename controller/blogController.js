@@ -1,8 +1,8 @@
 
 const path = require("path");
 const fs = require("fs");
-const {find_allblog,create_blog,find_blogById,remove_blog} = require('../services/blogService');
-const {find_one_userById} = require("../services/userService");
+const {find_allblog,create_blog,find_blog_by_id,remove_blog,find_blogs_count} = require('../services/blogService');
+const {find_one_user_byid} = require("../services/userService");
 const user = require("../models/user");
 const Blog = require("../models/blog")
 
@@ -41,24 +41,48 @@ const formate_date = (blogs)=>{
 
 const get_allblog = async (req, res) => {
   try {
+
+
     let blogs = await find_allblog()
     const blog_tosend = formate_date(blogs)
+    const blogs_count = await find_blogs_count()
+    let show_more = true ;
+    if(blog_tosend.length == blogs_count){
+        show_more = false;
+    }
     res.render("user/home", {
       blog:blog_tosend,
       showheader: true,
       user: req.session.user.name,
+      show_more
     });
   } catch (err) {
     console.log(err); 
   }
 };
 
+const paginate = async(req,res)=>{
+   try {
+    let current_page = req.params.page
+    console.log("page",current_page);
+
+    let response = await find_allblog(current_page)
+    let blog_count = await find_blogs_count()
+    console.log(blog_count);
+  
+    const blogs = formate_date(response)
+    res.json({blogs,blog_count})
+   } catch (error) {
+     console.log(err);
+   }
+}
+
 const find_blog = async (req, res) => {
   try {
     let id = req.params.id;
     let { name, _id } = req.session.user;
 
-    const blog = await find_blogById(id)
+    const blog = await find_blog_by_id(id)
     if (blog[0].author._id == _id) {
         blog[0].showedit = true;
         const blog_tosend = formate_date(blog)
@@ -76,8 +100,8 @@ const get_edit_blogdata = async (req, res) => {
   try {
     let id = req.params.id;
     let { name,_id } = req.session.user;
-    const user = await find_one_userById(_id)
-    const blog = await find_blogById(id)
+    const user = await find_one_user_byid(_id)
+    const blog = await find_blog_by_id(id)
     if(user.role == "admin"){
        return res.render("user/editblog", { blog, showheader: true, user: name , admin:true });
     }else{
@@ -95,7 +119,7 @@ const post_edit_blog = async (req, res) => {
     console.log(req.body);
     let { title, description, content } = req.body;
     if (req.file) {
-      const edited_blog = await find_blogById(id)
+      const edited_blog = await find_blog_by_id(id)
         const image_path = path.join(
           __dirname,
           "..",
@@ -127,11 +151,11 @@ const post_edit_blog = async (req, res) => {
         }
       );
     }
-   const user = await find_one_userById(_id)
+   const user = await find_one_user_byid(_id)
    if(user.role == "admin"){
      res.redirect("/admin/posts");
    }else{
-     res.redirect("/");
+     res.redirect("/"); 
    }
   } catch (err) {
     console.log(err);
@@ -142,7 +166,7 @@ const delete_blog = async (req, res) => {
   try {
     let id = req.params.id;
     let {_id} = req.session.user
-    const deleting_blog = await remo
+    const deleting_blog = await remove_blog(id)
     const image_path = path.join(
       __dirname,
       "..",
@@ -156,7 +180,7 @@ const delete_blog = async (req, res) => {
     }
     const response = await remove_blog(id);
     console.log(response);
-    const user = await find_one_userById(_id)
+    const user = await find_one_user_byid(_id)
     if(user.role == "admin"){
       res.redirect("/admin/posts");
     }else{
@@ -175,5 +199,6 @@ module.exports = {
   get_edit_blogdata,
   post_edit_blog,
   delete_blog,
-  formate_date
+  formate_date,
+  paginate
 };

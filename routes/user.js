@@ -13,7 +13,7 @@ router.get('/posts',auth,user_posts)
 router.get('/signup',(req,res)=>{
     res.render('user/signup',{showheader:false})    
 }) 
-router.get('/detail',(req,res)=>{
+router.get('/detail',auth,(req,res)=>{
     res.render("user/detailedview")
 })
 router.get('/signin',(req,res)=>{

@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const {create_user,find_one_userByEmail,find_user_blogs} = require('../services/userService')
+const {create_user,find_one_user_by_email,find_user_blogs} = require('../services/userService')
 const Blog = require("../models/blog");
 
 
@@ -25,12 +25,12 @@ const signup = async(req,res)=>{
     let email_check = isValidEmail(email)
     let name_check = isValidName(name)
     let password_check = isValidPassword(password)
-    let email_exist_chk = await User.findOne({email:email});
+    let email_exist_chk = await find_one_user_by_email(email)
     
     if( !email_check || !name_check){
         return res.render("signup",{err:"Invalid credential"});
     }
-    if(!password){
+    if(!password_check){
         return res.render("signup",{err:"Password length must be eight"}); 
     }
     if (email_exist_chk) {
@@ -60,7 +60,7 @@ const signin = async(req,res)=>{
  let {email,password} = req.body; 
 
  try{
-    const user = await find_one_userByEmail(email)
+    const user = await find_one_user_by_email(email)
     if(user){
        await bcrypt.compare(password,user.password,(err,response)=>{
             if(response){

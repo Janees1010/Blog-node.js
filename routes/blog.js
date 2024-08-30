@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middlewares/auth')
 const multer = require('multer')
-const {add_blog,find_blog,get_edit_blogdata,post_edit_blog,delete_blog} = require('../controller/blogController')
+const {add_blog,find_blog,get_edit_blogdata,post_edit_blog,delete_blog,paginate} = require('../controller/blogController')
 
 
 const storage = multer.diskStorage({
@@ -29,5 +29,5 @@ router.get('/edit/:id',get_edit_blogdata)
 router.post('/editblog/:id',upload.single("image"),post_edit_blog)
  
 router.get("/delete/:id",delete_blog)  
-
+router.get("/pagination/:page",paginate)
 module.exports = router           

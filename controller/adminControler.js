@@ -1,5 +1,5 @@
-const {get_all_users,edit_userRole} = require("../services/userService")
-const {find_allblog,find_blogById} = require("../services/blogService")
+const {get_all_users,edit_userRole,remove_user} = require("../services/userService")
+const {find_allblog,find_blog_by_id,find_blogs_count} = require("../services/blogService")
 const {formate_date} = require("../controller/blogController")
 
 
@@ -15,7 +15,18 @@ const get_users  = async(req,res)=>{
 const get_posts = async(req,res)=>{
     try {
         const blogs  = await find_allblog()
-        res.render("admin/posts",{blogs,admin:true})
+        const blogs_count = await find_blogs_count()
+        let show_more = true ;
+        if(blogs.length == blogs_count){
+            show_more = false;
+        }
+        res.render("admin/posts", {
+          blogs,
+          admin: true,
+          user: req.session.user.name,
+          show_more
+        });
+        // res.render("admin/posts",{blogs,admin:true,user:req.session.user.name})
     } catch (error) {
         console.log(error);
     }
@@ -26,7 +37,7 @@ const detailed_view = async (req, res) => {
       let id = req.params.id;
       let { name, _id } = req.session.user;
   
-      const blog = await find_blogById(id)
+      const blog = await find_blog_by_id(id)
         blog[0].showedit = true
         const blog_tosend = formate_date(blog)
         return res.render("admin/detailedview", { blog:blog_tosend, showheader: true, user: name,admin:true });
@@ -51,4 +62,16 @@ const detailed_view = async (req, res) => {
         console.log(error);
      }
  }
-module.exports = {get_users,get_posts,detailed_view ,edit_user}
+
+ const delete_user = async(req,res)=>{
+  try {
+    const id = req.params.id;
+    const response = await remove_user(id)
+    console.log(response,"user removed");
+    return res.redirect('/admin')
+  } catch (error) {
+    console.log(error);
+  }
+
+ }
+module.exports = {get_users,get_posts,detailed_view ,edit_user,delete_user}

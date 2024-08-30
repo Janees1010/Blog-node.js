@@ -15,34 +15,43 @@
       border-radius: 5px;
       color: #212121;
     }
+
     h1 {
       font-weight: 600;
     }
+
     p {
       font-weight: 400;
     }
+
     main {
-      padding: 40px 80px;
+      padding: 70px 60px 6px 60px;
     }
+
     nav {
       background-color: #333333;
     }
+
     .dropdown:hover {
       background-color: #007BFF;
     }
+
     .nav-link {
       color: #6C757D !important;
       font-weight: 500;
     }
+
     .navbar-brand {
       color: #6C757D !important;
       font-weight: 500;
     }
+
     body {
       background-color: #F7F7F7;
       font-family: sans-serif;
     }
-    a{
+
+    a {
       text-decoration: none;
       cursor: pointer;
     }
@@ -53,12 +62,12 @@
 
 
 
-  <main>
+  <main id="post-container">
     {{#each blog}}
     <a href='/blog/post/{{_id}}'>
       <div class="d-flex blog-post-container align-items-center gap-3 justify-content-between">
         <div>
-          <h6 style="color:#808e8a;">Written by {{author.name}} / created At  {{createdAt}}</h6>
+          <h6 style="color:#808e8a;">Written by {{author.name}} / created At {{createdAt}}</h6>
           <h1>{{title}}</h1>
           <p>{{description}}</p>
         </div>
@@ -71,7 +80,9 @@
 
     {{/each}}
   </main>
-
+  {{#if show_more}}
+    <a id="pagination-btn" style="margin-left:60px;padding-bottom:50px;cursus:pointer;" onclick="paginate()">Show more ..</a>
+  {{/if}}
 
 
 
@@ -84,6 +95,49 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
     crossorigin="anonymous"></script>
+  <script>
+    let curren_page = 0;
+    async function paginate() {
+
+      curren_page++;
+      console.log(curren_page)
+      const blogs = await fetch(`http://localhost:9000/blog/pagination/${curren_page}`, {
+        method: "get"
+      })
+      const data = await blogs.json()
+      console.log(data)
+      if (data) {
+        let output = '';
+        {{!-- document.getElementById("post-container").innerHTML = ""; --}}
+        data.blogs.forEach((blog) => {
+          output += `<a href='/blog/post/${blog._id}'>
+      <div class="d-flex blog-post-container align-items-center gap-3 justify-content-between">
+        <div>
+          <h6 style="color:#808e8a;">Written by ${blog.author.name} / created At  ${blog.createdAt}</h6>
+          <h1>${blog.title}</h1>
+          <p>${blog.description}</p>
+        </div>
+        <div>
+          <img style="border-radius: 10px; padding:10px" src="/images/${blog.banner}" alt="" width="190px" height="130px">
+        </div>
+      </div>
+      <hr class="text-dark">
+    </a>
+    `
+
+          })
+          document.getElementById("post-container").innerHTML += output;
+          let limit = 2;
+          let blogs_loaded = (curren_page + 1) * limit;
+          let blogs_count = data.blog_count
+          console.log("blog count",blogs_count)
+          console.log("blog loaded",blogs_loaded)
+          if(blogs_loaded >= blogs_count){
+            document.getElementById("pagination-btn").innerHTML = "";
+          }
+        }
+       }
+  </script>
 </body>
 
 </html>
