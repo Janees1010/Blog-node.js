@@ -81,7 +81,7 @@
     {{/each}}
   </main>
   {{#if show_more}}
-    <a id="pagination-btn" style="margin-left:60px;padding-bottom:50px;cursus:pointer;" onclick="paginate()">Show more ..</a>
+    <a id="pagination-btn" style="margin-left:60px;padding-bottom:50px;cursus:pointer;" onclick="showmore()">Show more ..</a>
   {{/if}}
 
 
@@ -97,7 +97,7 @@
     crossorigin="anonymous"></script>
   <script>
     let curren_page = 0;
-    async function paginate() {
+    async function showmore() {
 
       curren_page++;
       console.log(curren_page)

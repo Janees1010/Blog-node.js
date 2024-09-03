@@ -17,6 +17,7 @@ app.listen(port, ()=>console.log(`server is running on ${port}`));
 
 connectDB()
 
+
 app.use(session({
     secret:process.env.SECRET,
     resave:false,
@@ -43,3 +44,4 @@ app.use(express.static(path.join(__dirname,'public')))
 app.use('/',user_route)
 app.use('/blog',auth,blog_route)
 app.use("/admin",admin_auth,admin_route)
+

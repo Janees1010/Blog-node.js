@@ -119,13 +119,14 @@ const post_edit_blog = async (req, res) => {
     console.log(req.body);
     let { title, description, content } = req.body;
     if (req.file) {
-      const edited_blog = await find_blog_by_id(id)
+        const edited_blog = await find_blog_by_id(id)
+        console.log(edited_blog);
         const image_path = path.join(
           __dirname,
           "..",
           "public",
           "images",
-          edited_blog.banner
+          edited_blog[0].banner
         );
 
         if (fs.existsSync(image_path)) {

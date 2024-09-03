@@ -43,7 +43,7 @@ const find_user_blogs = async(id)=>{
     }
 }
 
-const edit_userRole = async(id,role)=>{
+const edit_user_role = async(id,role)=>{
   try {
     const response  = await User.findByIdAndUpdate({_id:id},{role:role})
   } catch (error) {
@@ -59,4 +59,4 @@ const remove_user = async(id)=>{
     }
 }
 
-module.exports={create_user,find_one_user_by_email,get_all_users,find_user_blogs,find_one_user_byid,edit_userRole,remove_user}
+module.exports={create_user,find_one_user_by_email,get_all_users,find_user_blogs,find_one_user_byid,edit_user_role,remove_user}

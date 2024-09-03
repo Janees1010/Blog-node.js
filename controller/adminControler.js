@@ -1,4 +1,4 @@
-const {get_all_users,edit_userRole,remove_user} = require("../services/userService")
+const {get_all_users,edit_user_role,remove_user} = require("../services/userService")
 const {find_allblog,find_blog_by_id,find_blogs_count} = require("../services/blogService")
 const {formate_date} = require("../controller/blogController")
 
@@ -55,7 +55,7 @@ const detailed_view = async (req, res) => {
         //     return 
         // }
         let id = req.params.id
-        const response = await edit_userRole(id,role) 
+        const response = await edit_user_role(id,role) 
         console.log(response);
          return res.redirect("/admin")
      }catch (error) {
